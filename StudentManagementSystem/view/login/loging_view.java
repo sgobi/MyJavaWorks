@@ -1,23 +1,16 @@
 package StudentManagementSystem.view.login;
 
+import StudentManagementSystem.controller.loging.loging_controller;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-public class loging_view {
-    JFrame jf ;
- loging_view()
-{
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
-
-}
+public class loging_view implements ActionListener {
+    JFrame jf ;JButton btn_exit,btn_loging;
 
 public void loging_textboxes_buttons(){
     jf = new JFrame("Loging");
@@ -51,11 +44,11 @@ lbl_password.setText("Password");
 JTextField jtf__password = new JTextField();
 // jtf__password.setBounds(200, 100, 150, 30);
 
-    JButton btn_loging = new JButton();
+     btn_loging = new JButton();
     btn_loging.setText("Loging");
     // btn_loging.setBounds(100, 150, 150, 30);
 
-    JButton btn_exit = new JButton();
+     btn_exit = new JButton();
     btn_exit.setText("Exit");
     // btn_exit.setBounds(300, 150, 150, 30);
 
@@ -80,11 +73,27 @@ groupBoxPanel.add(groupBoxPanel2);
     jf.pack();
     jf.setVisible(true);
     jf.setLocation(500,250);
+
+
+    btn_exit.addActionListener(this);
 }
 
     public static void main(String[] args) {
         loging_view lv = new loging_view();
         lv.loging_textboxes_buttons();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+    
+if(e.getSource()==btn_exit)
+{
+System.out.println("hi exit");
+
+loging_controller lc = new loging_controller();
+lc.exit();
+}
+
     }
  
 }
