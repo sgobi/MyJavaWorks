@@ -1,6 +1,7 @@
 package StudentManagementSystem.view.login;
 
-import StudentManagementSystem.controller.loging.loging_controller;
+import StudentManagementSystem.controller.loging.LogingController;
+import StudentManagementSystem.view.student.StudentView;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -76,6 +77,7 @@ groupBoxPanel.add(groupBoxPanel2);
 
 
     btn_exit.addActionListener(this);
+    btn_loging.addActionListener(this);
 }
 
     public static void main(String[] args) {
@@ -90,8 +92,18 @@ if(e.getSource()==btn_exit)
 {
 System.out.println("hi exit");
 
-loging_controller lc = new loging_controller();
+LogingController lc = new LogingController();
 lc.exit();
+}
+
+if(e.getSource()==btn_loging)
+{
+
+
+jf.dispose();
+    LogingController lc = new LogingController();
+lc.loging();
+
 }
 
     }
