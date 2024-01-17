@@ -19,7 +19,7 @@ public class CalenderView extends JFrame {
 
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setTitle("Swing Calandar");
-    this.setSize(300,200);
+    this.setSize(300,140);
     this.setLayout(new BorderLayout());
     this.setVisible(true);
 
@@ -43,7 +43,8 @@ public class CalenderView extends JFrame {
         updateMonth();
       }
     });
- 
+ JPanel mainpanel = new JPanel();
+ mainpanel.setLayout(new BorderLayout());
     JPanel panel = new JPanel();
     panel.setLayout(new BorderLayout());
     panel.add(b1,BorderLayout.WEST);
@@ -71,11 +72,16 @@ public class CalenderView extends JFrame {
 
                         if (selectedRow != -1 && selectedColumn != -1) {
                             Object selectedValue = table.getValueAt(selectedRow, selectedColumn);
-                            JOptionPane.showMessageDialog(null, "Selected Cell Value: " + selectedValue);
+                            //JOptionPane.showMessageDialog(null, "Selected Cell Value: " + selectedValue);
                             // System.out.println(selectedRow +"  "+ selectedColumn);
                             
                               
-                        
+                      
+                         System.out.print(selectedValue);
+                          System.out.print(  updateMonth()[0]);
+                          System.out.println(  updateMonth()[1]);
+
+                            
                         
                         }
                     }
@@ -83,16 +89,27 @@ public class CalenderView extends JFrame {
             });
     JScrollPane pane = new JScrollPane(table);
  
-    this.add(panel,BorderLayout.NORTH);
-    this.add(pane,BorderLayout.CENTER);
+    // this.add(panel,BorderLayout.NORTH);
+    // this.add(pane,BorderLayout.CENTER);
+    mainpanel.add(panel,BorderLayout.NORTH);
+    mainpanel.add(pane,BorderLayout.NORTH);
+ this.add(mainpanel);
+
+
+
+
  
     this.updateMonth();
 
   }
+    // Method to set a specific date
+    public void setDate(int day, int month, int year) {
+      cal.set(year, month - 1, day); // Month is 0-based, so subtract 1
+      updateMonth();
+  }
 
 
-
-  void updateMonth() {
+  Object[] updateMonth() {
     cal.set(Calendar.DAY_OF_MONTH, 1);
  
     String month = cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
@@ -111,10 +128,12 @@ public class CalenderView extends JFrame {
       model.setValueAt(day, i/7 , i%7 );    
       i = i + 1;
     }
- 
+    Object[] deatils= {month,year};
+ return deatils;
   }
   public static void main(String[] arguments) {
     JFrame.setDefaultLookAndFeelDecorated(true);
     CalenderView sc = new CalenderView();
+    sc.setDate(14,12,2004);
   }
 }
