@@ -1,5 +1,5 @@
 
-package StudentManagementSystem.view.student;
+package StudentManagementSystem.view.Student;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;

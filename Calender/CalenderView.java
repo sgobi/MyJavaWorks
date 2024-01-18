@@ -1,3 +1,6 @@
+
+//REf : https://www.javacodex.com/Swing/Swing-Calendar
+ 
 package Calender;
 
 import java.util.*;
@@ -13,18 +16,17 @@ public class CalenderView extends JFrame {
     DefaultTableModel model;
   Calendar cal = new GregorianCalendar();
   JLabel label;
-
-
+  int selectedRow, selectedColumn;
+  JTable table;
   CalenderView(){
-
+ 
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setTitle("Swing Calandar");
-    this.setSize(300,140);
+    this.setSize(300,200);
     this.setLayout(new BorderLayout());
-    this.setVisible(true);
 
-
-
+ 
+ 
     label = new JLabel();
     label.setHorizontalAlignment(SwingConstants.CENTER);
  
@@ -43,8 +45,7 @@ public class CalenderView extends JFrame {
         updateMonth();
       }
     });
- JPanel mainpanel = new JPanel();
- mainpanel.setLayout(new BorderLayout());
+ 
     JPanel panel = new JPanel();
     panel.setLayout(new BorderLayout());
     panel.add(b1,BorderLayout.WEST);
@@ -54,60 +55,94 @@ public class CalenderView extends JFrame {
  
     String [] columns = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
     model = new DefaultTableModel(null,columns);
-    JTable table = new JTable(model);
-
-     // Disable editing for all cells
-     table.setDefaultEditor(Object.class, null);
-            // Set cell selection mode to allow selecting individual cells
-     table.setCellSelectionEnabled(true);
-
-
-     // Add a ListSelectionListener to the table's selection model
-            table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-                @Override
-                public void valueChanged(ListSelectionEvent e) {
-                    if (!e.getValueIsAdjusting()) {
-                        int selectedRow = table.getSelectedRow();
-                        int selectedColumn = table.getSelectedColumn();
-
-                        if (selectedRow != -1 && selectedColumn != -1) {
-                            Object selectedValue = table.getValueAt(selectedRow, selectedColumn);
-                            //JOptionPane.showMessageDialog(null, "Selected Cell Value: " + selectedValue);
-                            // System.out.println(selectedRow +"  "+ selectedColumn);
-                            
-                              
-                      
-                         System.out.print(selectedValue);
-                          System.out.print(  updateMonth()[0]);
-                          System.out.println(  updateMonth()[1]);
-
-                            
-                        
-                        }
-                    }
-                }
-            });
+     table = new JTable(model);
     JScrollPane pane = new JScrollPane(table);
  
-    // this.add(panel,BorderLayout.NORTH);
-    // this.add(pane,BorderLayout.CENTER);
-    mainpanel.add(panel,BorderLayout.NORTH);
-    mainpanel.add(pane,BorderLayout.NORTH);
- this.add(mainpanel);
 
+   // Disable editing for all cells
+   table.setDefaultEditor(Object.class, null);
+   // Set cell selection mode to allow selecting individual cells
+table.setCellSelectionEnabled(true);
 
-
-
+ // Set selection mode to only allow selection of single cells
+ table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+//  table.setColumnSelectionAllowed(true);
+//  table.setRowSelectionAllowed(true);
  
+ 
+ 
+ // Add a ListSelectionListener to the table's selection model
+
+table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+  @Override
+  public void valueChanged(ListSelectionEvent e) {
+      if (!e.getValueIsAdjusting()) {
+           selectedRow = table.getSelectedRow();
+           selectedColumn = table.getSelectedColumn();
+
+          if (selectedRow != -1 && selectedColumn != -1) {
+              Object selectedValue = table.getValueAt(selectedRow, selectedColumn);
+
+              if (selectedValue == null || selectedValue.toString().isEmpty()) {
+                  // Disable row and column selection if the cell is empty
+                  table.clearSelection();
+                  table.setColumnSelectionAllowed(false);
+                  table.setRowSelectionAllowed(false);
+              } else {
+                  // Enable row and column selection
+                  SetColoure(selectedRow, selectedColumn);
+                  Object val = table.getValueAt(selectedRow, selectedColumn);
+                  JOptionPane.showMessageDialog(null, val);
+                  table.clearSelection();
+            
+                  
+                  table.setSelectionBackground(Color.BLUE); // Change this to your desired color
+                  table.setSelectionForeground(Color.WHITE); // Change this to your desired text 
+                  table.setColumnSelectionAllowed(true);
+                  table.setRowSelectionAllowed(true);
+              }
+          }
+      }
+  }
+});
+
+
+    this.add(panel,BorderLayout.NORTH);
+    this.add(pane,BorderLayout.CENTER);
+    this.pack();
+    this.setVisible(true);
+
+  
+
+
     this.updateMonth();
-
+ 
   }
-    // Method to set a specific date
-    public void setDate(int day, int month, int year) {
-      cal.set(year, month - 1, day); // Month is 0-based, so subtract 1
-      updateMonth();
-  }
+ 
 
+  
+  public void SetColoure(int calenderRow , int calenderCol )
+  {
+
+
+
+     table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+              @Override
+              public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                      boolean hasFocus, int row, int column) {
+                  Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+  
+                  // Set background color for specific row and column
+                  if (row == calenderRow && column == calenderCol) { // Example: set color for row 2, column 3
+                      c.setBackground(Color.GREEN);
+                  } else {
+                      c.setBackground(table.getBackground());
+                  }
+  
+                  return c;
+              }
+          });
+        }
 
   Object[] updateMonth() {
     cal.set(Calendar.DAY_OF_MONTH, 1);
@@ -129,11 +164,45 @@ public class CalenderView extends JFrame {
       i = i + 1;
     }
     Object[] deatils= {month,year};
- return deatils;
+    return deatils;
   }
+ 
+//finding a date
+  public void findAndHighlightDate(int day, int month, int year) {
+    int rowCount = model.getRowCount();
+    int colCount = model.getColumnCount();
+    setDateMonthYear(day, month,  year);
+    for (int row = 0; row < rowCount; row++) {
+        for (int col = 0; col < colCount; col++) {
+            Object cellValue = model.getValueAt(row, col);
+
+            if (cellValue instanceof Integer && (Integer) cellValue == day) {
+                // Highlight the cell for the specified date
+                table.changeSelection(row, col, false, false);
+                table.setSelectionBackground(Color.YELLOW);
+                table.setSelectionForeground(Color.BLACK);
+                return; // Stop searching after finding the date
+            }
+        }
+    }
+}
+
+    // Method to set a specific date
+    public void setDateMonthYear(int day, int month, int year) {
+      cal.set(year, month - 1, day); // Month is 0-based, so subtract 1
+      updateMonth();
+  }
+
+
+  
+
   public static void main(String[] arguments) {
     JFrame.setDefaultLookAndFeelDecorated(true);
     CalenderView sc = new CalenderView();
-    sc.setDate(14,12,2004);
+    //sc.setDateMonthYear(20, 02, 2004);
+   sc.findAndHighlightDate(28, 02, 2004);
+  
   }
+
+
 }

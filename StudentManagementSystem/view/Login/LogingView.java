@@ -2,7 +2,7 @@ package StudentManagementSystem.view.Login;
 
 import StudentManagementSystem.controller.Loging.*;
 import StudentManagementSystem.database.DbConnection;
-import StudentManagementSystem.view.student.StudentView;
+import StudentManagementSystem.view.Student.StudentView;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;

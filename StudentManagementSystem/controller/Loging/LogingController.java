@@ -1,7 +1,7 @@
 package StudentManagementSystem.controller.Loging;
 
 
-import StudentManagementSystem.view.student.*;;
+import StudentManagementSystem.view.Student.*;;
 public class LogingController {
     
     public void loging()
