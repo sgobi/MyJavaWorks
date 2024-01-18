@@ -5,18 +5,19 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 import java.awt.*;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-public class StudentView {
+public class StudentView implements ActionListener {
     JFrame jf; 
     JPanel mainpanel,uppanel, topuppanel,middlepanel,topmiddlepanel,downpanel,topdownpanel,genderpanel,textAreaPanel,GtextAreaPanel;
 
     JLabel LblFName,LblLname,LblAddress,LblTpNo,LblDob,LblRegNo,LblGname,LblGAddress,LblGMobileNo,emptylbl1,emptylbl2;
     JTextField JtfFName,JtfLname,JtfTpNo,JtfGname,JtfGMobileNo;
     JTextArea JtaAddress,JtfGAddress;
-    JComboBox JcbRegNo;
+    JComboBox<String> JcbRegNo ;
     JButton JbAdd,JbUpdate,JbDelete,JbExit;
 
 
@@ -48,22 +49,23 @@ public class StudentView {
       mainpanel= new JPanel(new BorderLayout());
 
       // uppanel = new JPanel(new GridLayout(2,4,2,2));
-       uppanel = new JPanel(new FlowLayout(FlowLayout.LEADING,20,25));// new FlowLayout(FlowLayout.CENTER));
+       uppanel = new JPanel(new BorderLayout(20,20));// new FlowLayout(FlowLayout.CENTER));
        uppanel.setBorder(new TitledBorder("Personal Infomartion"));
        topuppanel = new JPanel(new GridLayout(4,4,10,10));
 
-      middlepanel = new JPanel(new FlowLayout(FlowLayout.LEADING,20,25));
+      middlepanel = new JPanel(new BorderLayout(20,20));
       middlepanel.setBorder(new TitledBorder("Gurdian Infomartion"));
       topmiddlepanel = new JPanel(new GridLayout(2,4,10,10));
 
 
-      downpanel = new JPanel(new GridLayout(3,2,2,2));
+      downpanel = new JPanel(new BorderLayout(20,20));
       // downpanel.setBorder(new TitledBorder());
-      topdownpanel = new JPanel(new GridLayout(1,6,10,10));
+      topdownpanel = new JPanel(new GridLayout(2,6,10,10));
 
 
       genderpanel= new JPanel(new GridLayout(1,2,10,10));
       genderpanel.setBorder(new TitledBorder("Gender"));
+
        JrbMale = new JRadioButton("Male");
        JrbFemale = new JRadioButton("Female");
        genderpanel.add(JrbMale);
@@ -71,6 +73,7 @@ public class StudentView {
        ButtonGroup genderGroup = new ButtonGroup();
        genderGroup.add(JrbMale);
        genderGroup.add(JrbFemale);
+
        LblFName =new JLabel("First Name");
        LblLname=new JLabel("Last Name");;
        LblAddress=new JLabel("Residence Address");
@@ -82,8 +85,14 @@ public class StudentView {
        LblGname =  new JLabel("Gardian Name");
        LblGAddress = new JLabel("Gardian Address");
        LblGMobileNo = new JLabel("Gardian Mobile No");
+    //testing ----------------------------
+    String[] items = {"Item 1", "Item 2", "Item 3", "Item 4"};
+    
+JcbRegNo = new JComboBox<>(items);
 
-      JcbRegNo = new JComboBox();
+
+
+    //-------------------
       JtfGname =  new JTextField(15); 
       JtfGMobileNo = new JTextField(15); 
        JtfGAddress = new JTextArea(2,15);
@@ -109,20 +118,28 @@ public class StudentView {
        uppanel.add(topuppanel,BorderLayout.NORTH);
 
        topmiddlepanel.add(LblGname);topmiddlepanel.add(JtfGname); topmiddlepanel.add(LblGMobileNo);topmiddlepanel.add(JtfGMobileNo);
-        topmiddlepanel.add(LblGAddress);topmiddlepanel.add(GtextAreaPanel);
+      topmiddlepanel.add(LblGAddress);topmiddlepanel.add(GtextAreaPanel);
       topmiddlepanel.add(new JLabel() ); topmiddlepanel.add(new JLabel());//for empy
 
 
       middlepanel.add(topmiddlepanel,BorderLayout.NORTH);
       topdownpanel.add(new JLabel() ); topdownpanel.add(JbAdd);topdownpanel.add(JbUpdate);topdownpanel.add(JbDelete);
       topdownpanel.add(JbExit );  topdownpanel.add(new JLabel() ); 
-      downpanel.add(topdownpanel,BorderLayout.NORTH);
+
+
+      topdownpanel.add(new JLabel() );  topdownpanel.add(new JLabel() );  topdownpanel.add(new JLabel() );  topdownpanel.add(new JLabel() ); 
+      topdownpanel.add(new JLabel() );   topdownpanel.add(new JLabel() ); 
+      downpanel.add(topdownpanel,BorderLayout.CENTER);
            
-      
+  
 
  mainpanel.add(uppanel,BorderLayout.NORTH);
 mainpanel.add(middlepanel,BorderLayout.CENTER);
  mainpanel.add(downpanel,BorderLayout.SOUTH);
+
+
+JcbRegNo.addActionListener(this);
+JbExit.addActionListener(this);
 
       jf.add(mainpanel);
 
@@ -135,6 +152,17 @@ mainpanel.add(middlepanel,BorderLayout.CENTER);
     public  void StudentDeatilsView()
     {
        new StudentView();
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+      if(e.getSource()==JcbRegNo){
+     JOptionPane.showMessageDialog(null, JcbRegNo.getSelectedIndex(), null, 0);
+      }
+
+      if(e.getSource()==JbExit){
+        System.exit(0);
+         }
     }
         
 }
