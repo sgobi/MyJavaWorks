@@ -1,6 +1,7 @@
 package StudentManagementSystem.view.login;
 
 import StudentManagementSystem.controller.loging.LogingController;
+import StudentManagementSystem.database.DbConnection;
 import StudentManagementSystem.view.student.StudentView;
 
 import javax.swing.*;
@@ -80,6 +81,12 @@ groupBoxPanel.add(groupBoxPanel2);
     btn_loging.addActionListener(this);
 }
 
+
+
+
+
+
+
     public static void main(String[] args) {
         loging_view lv = new loging_view();
         lv.loging_textboxes_buttons();
@@ -99,10 +106,16 @@ lc.exit();
 if(e.getSource()==btn_loging)
 {
 
-
-jf.dispose();
-    LogingController lc = new LogingController();
-lc.loging();
+    DbConnection dbconn = new DbConnection();
+    try {
+        dbconn.dbcon();
+    } catch (ClassNotFoundException e1) {
+        // TODO Auto-generated catch block
+        e1.printStackTrace();
+    }
+// jf.dispose();
+//     LogingController lc = new LogingController();
+// lc.loging();
 
 }
 
