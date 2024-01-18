@@ -1,4 +1,4 @@
-package StudentManagementSystem.controller.loging;
+package StudentManagementSystem.controller.Loging;
 
 
 import StudentManagementSystem.view.student.*;;

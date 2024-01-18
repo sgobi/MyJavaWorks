@@ -1,6 +1,6 @@
-package StudentManagementSystem.view.login;
+package StudentManagementSystem.view.Login;
 
-import StudentManagementSystem.controller.loging.LogingController;
+import StudentManagementSystem.controller.Loging.*;
 import StudentManagementSystem.database.DbConnection;
 import StudentManagementSystem.view.student.StudentView;
 
@@ -11,7 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
-public class loging_view implements ActionListener {
+public class LogingView implements ActionListener {
     JFrame jf ;JButton btn_exit,btn_loging;
 
 public void loging_textboxes_buttons(){
@@ -88,7 +88,7 @@ groupBoxPanel.add(groupBoxPanel2);
 
 
     public static void main(String[] args) {
-        loging_view lv = new loging_view();
+        LogingView lv = new LogingView();
         lv.loging_textboxes_buttons();
     }
 
@@ -109,13 +109,16 @@ if(e.getSource()==btn_loging)
     DbConnection dbconn = new DbConnection();
     try {
         dbconn.dbcon();
+
     } catch (ClassNotFoundException e1) {
         // TODO Auto-generated catch block
         e1.printStackTrace();
     }
-// jf.dispose();
-//     LogingController lc = new LogingController();
-// lc.loging();
+
+
+jf.dispose();
+    LogingController lc = new LogingController();
+lc.loging();
 
 }
 
