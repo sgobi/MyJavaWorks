@@ -17,7 +17,7 @@ public class FrontPage {
         JPanel main = new JPanel();
         main.setLayout(new BorderLayout());
         JPanel sub = new JPanel();
-        sub.setLayout(new GridLayout(2, 2));
+        sub.setLayout(new GridLayout(2, 1));
 
         CalenderView cv = new CalenderView();
         JButton b1 = new JButton("B1");
@@ -30,11 +30,12 @@ public class FrontPage {
             }
         });
 
-        sub.add(cv.UI());sub.add(new JLabel());
-   sub.add(new JLabel());sub.add(b1);
+        sub.add(cv.UI());sub.add(b1);
         main.add(sub);
         jf.add(main);
-        jf.setSize(500, 500);
+        // jf.setSize(200,170); //min size
+        // jf.setSize(500,170);//max size
+        jf.setSize(500,500);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jf.setVisible(true);
     }

@@ -6,14 +6,13 @@
 
 // To remove multiple consecutive empty lines, use the following regular expression in the search bar:
 // ^\s*\n
-
 // Ctrl + H
 
 package Calender;
+
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -28,28 +27,33 @@ public class CalenderView implements ActionListener, ListSelectionListener {
   JTable table;
  JButton pre,fwd;
  JScrollPane pane ;
- JPanel panel;
+ JPanel  main, panel;
 Integer getDate,getMonth,getYear;
   // CalenderView(){
     public JPanel UI(){
-  
-JPanel  main = new JPanel();
+
+ main = new JPanel();
 // main.setSize(300,2);
 main.setLayout(new BorderLayout());
     label = new JLabel();
     label.setHorizontalAlignment(SwingConstants.CENTER);
      pre = new JButton("<-"); fwd = new JButton("->");
-    pre.addActionListener(this);  
+    pre.addActionListener(this);
     fwd.addActionListener(this);
-   
+
     TopPanel();
     CalenderTable();
-  
+
     main.add(panel,BorderLayout.NORTH);
     main.add(pane,BorderLayout.CENTER);
     // main.pack();
-    
+
     // this.setVisible(true);
+
+         // Disable column resizing for all columns
+         for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
+          table.getColumnModel().getColumn(i).setResizable(false);
+      }
     updateMonth();
     return main;
   }
@@ -73,6 +77,8 @@ public JTable CalenderTable()
  // Disable editing for all cells
 table.setDefaultEditor(Object.class, null);
 table.setCellSelectionEnabled(true);
+  // Disable column reordering
+  table.getTableHeader().setReorderingAllowed(false);
 table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 table.getSelectionModel().addListSelectionListener(this);
 return table;
@@ -124,12 +130,15 @@ return table;
     setDateMonthYear(day, month,  year);
     for (int row = 0; row < rowCount; row++) {
         for (int col = 0; col < colCount; col++) {
+          
             Object cellValue = model.getValueAt(row, col);
             if (cellValue instanceof Integer && (Integer) cellValue == day) {
                 // Highlight the cell for the specified date
                 table.changeSelection(row, col, false, false);
                 table.setSelectionBackground(Color.YELLOW);
                 table.setSelectionForeground(Color.BLACK);
+
+              
                 return; // Stop searching after finding the date
             }
         }
@@ -137,23 +146,16 @@ return table;
 }
 
 public Object[] getDMY()
-
 {
   Object [] dmy={getDate,getMonth,getYear};
-
-
-  if(getDate !=null ||getMonth !=null||getYear !=null){
-
+  if(getDate !=null ||getMonth !=null||getYear !=null)
+  {
     return dmy;
-   } 
-  
- 
+   }
 
   JOptionPane.showMessageDialog(null,"Select A Date");
-          
+
   return null;
-
-
 }
 // Method to set a specific date
     private void setDateMonthYear(int day, int month, int year) {
@@ -174,7 +176,7 @@ public Object[] getDMY()
               cal.add(Calendar.MONTH, +1);
         updateMonth();
     }
-   
+
   }
 
 
@@ -199,7 +201,7 @@ public Object[] getDMY()
 
                   getMonth=(int) updateMonth()[2];
                   getYear=(int) updateMonth()[1];
-                
+
                   table.clearSelection();
                   table.setSelectionBackground(Color.BLUE); // Change this to your desired color
                   table.setSelectionForeground(Color.WHITE); // Change this to your desired text
@@ -209,7 +211,7 @@ public Object[] getDMY()
           }
       }
     }
-  
+
   }
 
 
