@@ -1,5 +1,14 @@
 //REf : https://www.javacodex.com/Swing/Swing-Calendar
 
+
+// To remove trailing whitespaces at the end of lines, use:
+// \s+$
+
+// To remove multiple consecutive empty lines, use the following regular expression in the search bar:
+// ^\s*\n
+
+// Ctrl + H
+
 package Calender;
 import java.util.*;
 import java.awt.*;
@@ -11,90 +20,63 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.*;
 
 
-public class CalenderView extends JFrame {
-    DefaultTableModel model;
+public class CalenderView implements ActionListener, ListSelectionListener {
+  DefaultTableModel model;
   Calendar cal = new GregorianCalendar();
   JLabel label;
   int selectedRow, selectedColumn;
   JTable table;
-
-
-
-  CalenderView(){
-    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    this.setTitle("Swing Calandar");
-    this.setSize(300,200);
-    this.setLayout(new BorderLayout());
+ JButton pre,fwd;
+ JScrollPane pane ;
+ JPanel panel;
+Integer getDate,getMonth,getYear;
+  // CalenderView(){
+    public JPanel UI(){
+  
+JPanel  main = new JPanel();
+// main.setSize(300,2);
+main.setLayout(new BorderLayout());
     label = new JLabel();
     label.setHorizontalAlignment(SwingConstants.CENTER);
-    JButton b1 = new JButton("<-");
-    b1.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent ae) {
-        cal.add(Calendar.MONTH, -1);
-        updateMonth();
-      }
-    });
-    JButton b2 = new JButton("->");
-    b2.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent ae) {
-        cal.add(Calendar.MONTH, +1);
-        updateMonth();
-      }
-    });
-    JPanel panel = new JPanel();
+     pre = new JButton("<-"); fwd = new JButton("->");
+    pre.addActionListener(this);  
+    fwd.addActionListener(this);
+   
+    TopPanel();
+    CalenderTable();
+  
+    main.add(panel,BorderLayout.NORTH);
+    main.add(pane,BorderLayout.CENTER);
+    // main.pack();
+    
+    // this.setVisible(true);
+    updateMonth();
+    return main;
+  }
+
+  public JPanel TopPanel()
+  {
+    panel = new JPanel();
     panel.setLayout(new BorderLayout());
-    panel.add(b1,BorderLayout.WEST);
+    panel.add(pre,BorderLayout.WEST);
     panel.add(label,BorderLayout.CENTER);
-    panel.add(b2,BorderLayout.EAST);
-    String [] columns = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
-    model = new DefaultTableModel(null,columns);
-     table = new JTable(model);
-    JScrollPane pane = new JScrollPane(table);
-   // Disable editing for all cells
-   table.setDefaultEditor(Object.class, null);
-   // Set cell selection mode to allow selecting individual cells
+    panel.add(fwd,BorderLayout.EAST);
+    return panel;
+  }
+public JTable CalenderTable()
+{
+
+  String [] columns = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
+  model = new DefaultTableModel(null,columns);
+   table = new JTable(model);
+   pane = new JScrollPane(table);
+ // Disable editing for all cells
+table.setDefaultEditor(Object.class, null);
 table.setCellSelectionEnabled(true);
- // Set selection mode to only allow selection of single cells
- table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//  table.setColumnSelectionAllowed(true);
-//  table.setRowSelectionAllowed(true);
- // Add a ListSelectionListener to the table's selection model
-table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-  @Override
-  public void valueChanged(ListSelectionEvent e) {
-      if (!e.getValueIsAdjusting()) {
-           selectedRow = table.getSelectedRow();
-           selectedColumn = table.getSelectedColumn();
-          if (selectedRow != -1 && selectedColumn != -1) {
-              Object selectedValue = table.getValueAt(selectedRow, selectedColumn);
-              if (selectedValue == null || selectedValue.toString().isEmpty()) {
-                  // Disable row and column selection if the cell is empty
-                  table.clearSelection();
-                  table.setColumnSelectionAllowed(false);
-                  table.setRowSelectionAllowed(false);
-              } else {
-                  // Enable row and column selection
-                  SetColoure(selectedRow, selectedColumn);
-                  Object val = table.getValueAt(selectedRow, selectedColumn);
-                  JOptionPane.showMessageDialog(null, val);
-                  table.clearSelection();
-                  table.setSelectionBackground(Color.BLUE); // Change this to your desired color
-                  table.setSelectionForeground(Color.WHITE); // Change this to your desired text
-                  table.setColumnSelectionAllowed(true);
-                  table.setRowSelectionAllowed(true);
-              }
-          }
-      }
-  }
-});
-    this.add(panel,BorderLayout.NORTH);
-    this.add(pane,BorderLayout.CENTER);
-    this.pack();
-    this.setVisible(true);
-    this.updateMonth();
-  }
-
-
+table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+table.getSelectionModel().addListSelectionListener(this);
+return table;
+}
   public void SetColoure(int calenderRow , int calenderCol )
   {
      table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -116,9 +98,10 @@ table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
   Object[] updateMonth() {
     cal.set(Calendar.DAY_OF_MONTH, 1);
-    String month = cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
-    int year = cal.get(Calendar.YEAR);
-    label.setText(month + " " + year);
+    String Month = cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
+    int NumberOfMonth =cal.get(Calendar.MONTH)+1;// cal.//getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
+    int Year = cal.get(Calendar.YEAR);
+    label.setText(Month + " " + Year);
     int startDay = cal.get(Calendar.DAY_OF_WEEK);
     int numberOfDays = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
     int weeks = cal.getActualMaximum(Calendar.WEEK_OF_MONTH);
@@ -129,13 +112,13 @@ table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
       model.setValueAt(day, i/7 , i%7 );
       i = i + 1;
     }
-    Object[] deatils= {month,year};
+    Object[] deatils= {Month,Year,NumberOfMonth};
     return deatils;
   }
 
 
   //finding a date
-  public void findAndHighlightDate(int day, int month, int year) {
+  public void addDateMonthYear(int day, int month, int year) {
     int rowCount = model.getRowCount();
     int colCount = model.getColumnCount();
     setDateMonthYear(day, month,  year);
@@ -153,17 +136,83 @@ table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
     }
 }
 
+public Object[] getDMY()
+
+{
+  Object [] dmy={getDate,getMonth,getYear};
+
+
+  if(getDate !=null ||getMonth !=null||getYear !=null){
+
+    return dmy;
+   } 
+  
+ 
+
+  JOptionPane.showMessageDialog(null,"Select A Date");
+          
+  return null;
+
+
+}
 // Method to set a specific date
-    public void setDateMonthYear(int day, int month, int year) {
+    private void setDateMonthYear(int day, int month, int year) {
       cal.set(year, month - 1, day); // Month is 0-based, so subtract 1
       updateMonth();
   }
 
 
-  public static void main(String[] arguments) {
-    JFrame.setDefaultLookAndFeelDecorated(true);
-    CalenderView sc = new CalenderView();
-    //sc.setDateMonthYear(20, 02, 2004);
-   sc.findAndHighlightDate(28, 02, 2004);
+
+
+  @Override
+  public void actionPerformed(ActionEvent e) {
+    if(e.getSource()==pre){
+              cal.add(Calendar.MONTH, -1);
+        updateMonth();
+    }
+    if(e.getSource()==fwd){
+              cal.add(Calendar.MONTH, +1);
+        updateMonth();
+    }
+   
   }
+
+
+  @Override
+  public void valueChanged(ListSelectionEvent e) {
+    if(e.getSource() != null){
+
+         if (!e.getValueIsAdjusting()) {
+           selectedRow = table.getSelectedRow();
+           selectedColumn = table.getSelectedColumn();
+          if (selectedRow != -1 && selectedColumn != -1) {
+              Object selectedValue = table.getValueAt(selectedRow, selectedColumn);
+              if (selectedValue == null || selectedValue.toString().isEmpty()) {
+                  // Disable row and column selection if the cell is empty
+                  table.clearSelection();
+                  table.setColumnSelectionAllowed(false);
+                  table.setRowSelectionAllowed(false);
+              } else {
+                  // Enable row and column selection
+                  SetColoure(selectedRow, selectedColumn);
+                   getDate = (int) table.getValueAt(selectedRow, selectedColumn);
+
+                  getMonth=(int) updateMonth()[2];
+                  getYear=(int) updateMonth()[1];
+                
+                  table.clearSelection();
+                  table.setSelectionBackground(Color.BLUE); // Change this to your desired color
+                  table.setSelectionForeground(Color.WHITE); // Change this to your desired text
+                  table.setColumnSelectionAllowed(true);
+                  table.setRowSelectionAllowed(true);
+              }
+          }
+      }
+    }
+  
+  }
+
+
+
+
 }
