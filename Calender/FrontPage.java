@@ -20,6 +20,7 @@ public class FrontPage {
         sub.setLayout(new GridLayout(2, 1));
 
         CalenderView cv = new CalenderView();
+       
         JButton b1 = new JButton("B1");
         b1.addActionListener(new ActionListener() {
             @Override
@@ -31,6 +32,7 @@ public class FrontPage {
         });
 
         sub.add(cv.UI());sub.add(b1);
+        cv.addDateMonthYear(25, 8, 2025);
         main.add(sub);
         jf.add(main);
         // jf.setSize(200,170); //min size

@@ -13,6 +13,8 @@ package Calender;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.time.Month;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -22,21 +24,24 @@ import javax.swing.table.*;
 public class CalenderView implements ActionListener, ListSelectionListener {
   DefaultTableModel model;
   Calendar cal = new GregorianCalendar();
-  JLabel label;
+  JLabel LblMonthYear;
   int selectedRow, selectedColumn;
   JTable table;
  JButton pre,fwd;
  JScrollPane pane ;
  JPanel  main, panel;
 Integer getDate,getMonth,getYear;
-  // CalenderView(){
+Component c;
+   CalenderView(){
+    UI();
+  }
     public JPanel UI(){
 
  main = new JPanel();
 // main.setSize(300,2);
 main.setLayout(new BorderLayout());
-    label = new JLabel();
-    label.setHorizontalAlignment(SwingConstants.CENTER);
+    LblMonthYear = new JLabel();
+    LblMonthYear.setHorizontalAlignment(SwingConstants.CENTER);
      pre = new JButton("<-"); fwd = new JButton("->");
     pre.addActionListener(this);
     fwd.addActionListener(this);
@@ -46,11 +51,7 @@ main.setLayout(new BorderLayout());
 
     main.add(panel,BorderLayout.NORTH);
     main.add(pane,BorderLayout.CENTER);
-    // main.pack();
-
-    // this.setVisible(true);
-
-         // Disable column resizing for all columns
+  
          for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
           table.getColumnModel().getColumn(i).setResizable(false);
       }
@@ -63,7 +64,7 @@ main.setLayout(new BorderLayout());
     panel = new JPanel();
     panel.setLayout(new BorderLayout());
     panel.add(pre,BorderLayout.WEST);
-    panel.add(label,BorderLayout.CENTER);
+    panel.add(LblMonthYear,BorderLayout.CENTER);
     panel.add(fwd,BorderLayout.EAST);
     return panel;
   }
@@ -89,7 +90,7 @@ return table;
               @Override
               public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                       boolean hasFocus, int row, int column) {
-                  Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                   c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                   // Set background color for specific row and column
                   if (row == calenderRow && column == calenderCol) { // Example: set color for row 2, column 3
                       c.setBackground(Color.GREEN);
@@ -107,7 +108,7 @@ return table;
     String Month = cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
     int NumberOfMonth =cal.get(Calendar.MONTH)+1;// cal.//getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
     int Year = cal.get(Calendar.YEAR);
-    label.setText(Month + " " + Year);
+    LblMonthYear.setText(Month + " " + Year);
     int startDay = cal.get(Calendar.DAY_OF_WEEK);
     int numberOfDays = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
     int weeks = cal.getActualMaximum(Calendar.WEEK_OF_MONTH);
@@ -125,6 +126,7 @@ return table;
 
   //finding a date
   public void addDateMonthYear(int day, int month, int year) {
+    
     int rowCount = model.getRowCount();
     int colCount = model.getColumnCount();
     setDateMonthYear(day, month,  year);
@@ -168,9 +170,14 @@ public Object[] getDMY()
 
   @Override
   public void actionPerformed(ActionEvent e) {
+  
     if(e.getSource()==pre){
               cal.add(Calendar.MONTH, -1);
+ 
+
         updateMonth();
+      
+
     }
     if(e.getSource()==fwd){
               cal.add(Calendar.MONTH, +1);
