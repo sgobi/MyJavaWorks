@@ -30,8 +30,9 @@ public class CalenderView implements ActionListener, ListSelectionListener {
  JButton pre,fwd;
  JScrollPane pane ;
  JPanel  main, panel;
-Integer getDate,getMonth,getYear;
+Integer selectedDate,selectedMonth,selectedYear;
 Component c;
+int TempMonth,TempYear;
    CalenderView(){
     UI();
   }
@@ -84,25 +85,7 @@ table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 table.getSelectionModel().addListSelectionListener(this);
 return table;
 }
-  public void SetColoure(int calenderRow , int calenderCol )
-  {
-     table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-              @Override
-              public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                      boolean hasFocus, int row, int column) {
-                   c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                  // Set background color for specific row and column
-                  if (row == calenderRow && column == calenderCol) { // Example: set color for row 2, column 3
-                      c.setBackground(Color.GREEN);
-                  } else {
-                      c.setBackground(table.getBackground());
-                  }
-                  return c;
-              }
-          });
-        }
-
-
+  
   Object[] updateMonth() {
     cal.set(Calendar.DAY_OF_MONTH, 1);
     String Month = cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
@@ -149,8 +132,8 @@ return table;
 
 public Object[] getDMY()
 {
-  Object [] dmy={getDate,getMonth,getYear};
-  if(getDate !=null ||getMonth !=null||getYear !=null)
+  Object [] dmy={selectedDate,selectedMonth,selectedYear};
+  if(selectedDate !=null ||selectedMonth !=null||selectedYear !=null)
   {
     return dmy;
    }
@@ -166,25 +149,37 @@ public Object[] getDMY()
   }
 
 
+  public void SetColoure(int calenderRow , int calenderCol )
+  {
+     table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+              @Override
+              public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                      boolean hasFocus, int row, int column) {
+                   c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                  // Set background color for specific row and column
+                  if (row == calenderRow && column == calenderCol) { // Example: set color for row 2, column 3
+                    
+                    
+                    if(selectedYear == (Integer.parseInt(LblMonthYear.getText().split(" ")[1]))&&selectedMonth== Month.valueOf(LblMonthYear.getText().split(" ")[0].toUpperCase()).getValue())
+                    {
+                      c.setBackground(Color.GREEN);
+                    }
+                    else
+                    {
+                      c.setBackground(Color.WHITE);
+                    }
+                
+                  } else {
+                      c.setBackground(table.getBackground());
+                  }
+                  return c;
+              }
+          });
+        }
 
 
-  @Override
-  public void actionPerformed(ActionEvent e) {
-  
-    if(e.getSource()==pre){
-              cal.add(Calendar.MONTH, -1);
- 
 
-        updateMonth();
-      
 
-    }
-    if(e.getSource()==fwd){
-              cal.add(Calendar.MONTH, +1);
-        updateMonth();
-    }
-
-  }
 
 
   @Override
@@ -198,20 +193,20 @@ public Object[] getDMY()
               Object selectedValue = table.getValueAt(selectedRow, selectedColumn);
               if (selectedValue == null || selectedValue.toString().isEmpty()) {
                   // Disable row and column selection if the cell is empty
-                  table.clearSelection();
+                 // table.clearSelection();
                   table.setColumnSelectionAllowed(false);
                   table.setRowSelectionAllowed(false);
               } else {
                   // Enable row and column selection
                   SetColoure(selectedRow, selectedColumn);
-                   getDate = (int) table.getValueAt(selectedRow, selectedColumn);
+                   selectedDate = (int) table.getValueAt(selectedRow, selectedColumn);
 
-                  getMonth=(int) updateMonth()[2];
-                  getYear=(int) updateMonth()[1];
+                  selectedMonth=(int) updateMonth()[2];
+                  selectedYear=(int) updateMonth()[1];
 
-                  table.clearSelection();
-                  table.setSelectionBackground(Color.BLUE); // Change this to your desired color
-                  table.setSelectionForeground(Color.WHITE); // Change this to your desired text
+                 // table.clearSelection();
+                  // table.setSelectionBackground(Color.RED); // Change this to your desired color
+                  // table.setSelectionForeground(Color.WHITE); // Change this to your desired text
                   table.setColumnSelectionAllowed(true);
                   table.setRowSelectionAllowed(true);
               }
@@ -221,7 +216,25 @@ public Object[] getDMY()
 
   }
 
+  @Override
+  public void actionPerformed(ActionEvent e) {
+  
+    if(e.getSource()==pre){
+ 
+              cal.add(Calendar.MONTH, -1);
+     
 
+              
+        updateMonth();
+     
+
+    }
+    if(e.getSource()==fwd){
+              cal.add(Calendar.MONTH, +1);
+        updateMonth();
+    }
+
+  }
 
 
 }
